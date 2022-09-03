@@ -1,0 +1,81 @@
+<html>
+    <body>
+    </body>
+    
+    <script>
+
+        function clickLight(row, col) {
+            changeLight(row, col)
+            changeLight(row - 1, col)
+            changeLight(row + 1, col)
+            changeLight(row, col - 1)
+            changeLight(row, col + 1)
+        }
+
+        function changeLight(row, col) {
+            if (row < 0 || row >= n || col < 0 || col >= n || row === 1 && col === 1) {
+                return
+            }
+            const $light = getLight(row, col)
+            const newValue = !lights[row][col]
+            lights[row][col] = newValue
+
+            if (newValue) {
+                $light.classList.add('on')
+            } else {
+                $light.classList.remove('on')
+            }
+        }
+
+        function getLight(row, col) {
+            return $table.childNodes[row].childNodes[col]
+        }
+
+        const n = 3
+        const lights = []
+        for (let row = 0; row < n; row++) {
+            lights.push([])
+            for (let col = 0; col < n; col++) {
+                lights[row].push(Math.random() * 2 > 1)
+            }
+        }
+        lights[1][1] = null
+
+        const $table = document.createElement('table')
+        lights.forEach((row, rowIndex) => {
+            const $tr = document.createElement('tr')
+            row.forEach((light, colIndex) => {
+                const $td = document.createElement('td')
+                if (light === null) {
+                    $td.classList.add('disable')
+                } else if (light) {
+                    $td.classList.add('on')
+                }
+
+                if (light !== null) {
+                    $td.addEventListener('click', e => clickLight(rowIndex, colIndex))
+                }
+                $tr.appendChild($td)
+            })
+            $table.appendChild($tr)
+        })
+        document.body.appendChild($table)
+    </script>
+
+    <style>
+        td {
+            width: 30;
+            height: 30;
+            border: 1px solid black;
+            background-color: black;
+        }
+
+        td.on {
+            background-color: yellow;
+        }
+
+        td.disable {
+            background-color: white;
+        }
+    </style>
+</html>
